@@ -30,7 +30,9 @@ struct OddlyApp: App {
 private struct UITestTypeSize: ViewModifier {
     func body(content: Content) -> some View {
         #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("--uitesting-large-type") {
+        if ProcessInfo.processInfo.arguments.contains("--uitesting-largest-type") {
+            content.dynamicTypeSize(.accessibility5)
+        } else if ProcessInfo.processInfo.arguments.contains("--uitesting-large-type") {
             content.dynamicTypeSize(.accessibility3)
         } else {
             content

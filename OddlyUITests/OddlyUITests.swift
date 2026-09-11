@@ -70,6 +70,47 @@ final class OddlyUITests: XCTestCase {
                       "The entire Curiosity cabinet button must open its sheet")
     }
 
+    private func scrollFullyIntoView(_ element: XCUIElement, maxSwipes: Int = 25,
+                                     file: StaticString = #filePath, line: UInt = #line) {
+        var attempts = 0
+        while attempts < maxSwipes {
+            if element.exists && element.isHittable && app.frame.contains(element.frame) { return }
+            let moveTowardTop = element.exists && element.frame.height > 0 && element.frame.midY < app.frame.midY
+            if app.frame.width > app.frame.height {
+                // App-wide landscape swipes can start at an OS gesture edge.
+                // Keep both ends inside the viewport and move by a small amount.
+                let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: moveTowardTop ? 0.4 : 0.7))
+                let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: moveTowardTop ? 0.7 : 0.4))
+                start.press(forDuration: 0.05, thenDragTo: end)
+            } else if moveTowardTop {
+                app.swipeDown()
+            } else {
+                app.swipeUp()
+            }
+            attempts += 1
+        }
+        XCTAssertTrue(element.exists && element.isHittable && app.frame.contains(element.frame),
+                      "Element must be fully reachable after scrolling: \(element), frame \(element.frame), app \(app.frame)",
+                      file: file, line: line)
+    }
+
+    private func tapFullyVisible(_ identifiers: String..., file: StaticString = #filePath, line: UInt = #line) {
+        for identifier in identifiers {
+            let button = app.buttons[identifier]
+            scrollFullyIntoView(button, file: file, line: line)
+            XCTAssertGreaterThanOrEqual(button.frame.height, 44, identifier, file: file, line: line)
+            XCTAssertGreaterThanOrEqual(button.frame.width, 44, identifier, file: file, line: line)
+            button.tap()
+        }
+    }
+
+    private func launchAtLargestTextSize() {
+        app.terminate()
+        app.launchArguments = ["--uitesting-reset", "--uitesting-largest-type"]
+        app.launch()
+        XCTAssertTrue(app.staticTexts["calculator.display"].waitForExistence(timeout: 10))
+    }
+
     func testImmediateExecutionBreadcrumbRepeatedEqualsAndFreshInput() {
         tap("key.2", "key.add", "key.3", "key.multiply")
         expectResult("5")
@@ -210,5 +251,57 @@ final class OddlyUITests: XCTestCase {
                       "Equals must fit completely: key \(equals.frame), app \(app.frame)")
         equals.tap()
         attachScreenshot("Real iOS large text landscape", wholeScreen: true)
+    }
+
+    func testLargestTextSecondaryPanelsScrollAndDismiss() {
+        launchAtLargestTextSize()
+        tapFullyVisible("toolbar.settings")
+        XCTAssertTrue(app.buttons["settings.done"].waitForExistence(timeout: 5))
+        let about = app.staticTexts["Oddly 1.0"]
+        scrollFullyIntoView(about)
+        XCTAssertTrue(app.buttons["settings.done"].isHittable)
+        attachScreenshot("Small phone accessibility5 settings bottom", wholeScreen: true)
+        tap("settings.done")
+
+        tapFullyVisible("key.1", "key.add", "key.1", "key.equals")
+        for _ in 0..<7 { tapFullyVisible("key.equals") }
+        expectResult("9")
+        tapFullyVisible("toolbar.history")
+        XCTAssertTrue(app.buttons["history.done"].waitForExistence(timeout: 5))
+        let oldest = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@ AND label == %@", "history.recall.", "1 + 1, equals 2"
+        )).firstMatch
+        scrollFullyIntoView(oldest)
+        XCTAssertTrue(app.buttons["history.done"].isHittable)
+        attachScreenshot("Small phone accessibility5 oldest history row", wholeScreen: true)
+        tap("history.done")
+
+        tapFullyVisible("toolbar.collection")
+        XCTAssertTrue(app.buttons["collection.done"].waitForExistence(timeout: 5))
+        let lastCard = app.descendants(matching: .any)["collection.locked.mirror-mirror"]
+        let hint = lastCard.buttons["A tiny hint"]
+        scrollFullyIntoView(hint)
+        hint.tap()
+        let hintText = app.staticTexts["A number that reads both ways. Try 12320 + 1."]
+        scrollFullyIntoView(hintText)
+        XCTAssertTrue(app.buttons["collection.done"].isHittable)
+        attachScreenshot("Small phone accessibility5 final cabinet hint", wholeScreen: true)
+        tap("collection.done")
+        XCTAssertTrue(app.staticTexts["calculator.display"].exists)
+    }
+
+    func testLargestTextLandscapeArithmeticRemainsReachable() {
+        launchAtLargestTextSize()
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let landscape = XCTNSPredicateExpectation(
+            predicate: NSPredicate { [weak self] _, _ in
+                guard let frame = self?.app.frame else { return false }
+                return frame.width > frame.height
+            }, object: nil
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [landscape], timeout: 10), .completed)
+        tapFullyVisible("key.6", "key.multiply", "key.7", "key.equals")
+        expectResult("42")
+        attachScreenshot("Small phone accessibility5 landscape arithmetic", wholeScreen: true)
     }
 }

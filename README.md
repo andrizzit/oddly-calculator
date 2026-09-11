@@ -10,7 +10,7 @@ A native iPhone and iPad calculator with a warm paper palette, satisfying keys, 
 
 <img src="docs/assets/oddly-iphone-discovery.png" width="260" alt="Oddly on iPhone, showing 42 and its first discovery"> <img src="docs/assets/oddly-iphone-cabinet.png" width="260" alt="The curiosity cabinet with collectible discoveries">
 
-Actual iPhone 16 Pro Max Simulator captures from the passing UI suite.
+Actual iPhone 16 Pro Max Simulator captures from the passing UI suite. Validation includes 47 core tests, 18 coordinator checks, nine baseline iOS workflows, and two supplemental workflows at the largest accessibility text size on iPhone SE. See the QA report for scope and remaining device checks.
 
 ## A calculator with character
 

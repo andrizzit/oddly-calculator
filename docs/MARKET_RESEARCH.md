@@ -24,7 +24,7 @@ The broad hypothesis is that people who appreciate well-crafted everyday objects
 
 Build **Oddly**, a native, offline calculator with a warm paper-like visual identity, dependable decimal arithmetic, useful scientific functions, local history and recall, and a collection of family-friendly numerical curiosities. Three personality levels control written humor and brief optional discovery decoration. Haptics and motion remain independently controlled. There is no ad network, tracking SDK, account, subscription, or backend in v1.
 
-The launch proposition is **“Serious math. Tiny nonsense.”** Open source makes the calculation and privacy implementation inspectable. It is a product attribute, not a substitute for a good calculator. “Oddly” is a working brand; availability and naming rights have not been established by this research.
+The launch proposition is **“Serious math. Tiny nonsense.”** Open source makes the calculation and privacy implementation inspectable. It is a product attribute, not a substitute for a good calculator. “Oddly” is a working brand; availability and naming rights have not been established by this research. A final public-listing check found [Oddly: AI Match Odds Generator](https://apps.apple.com/ro/app/oddly-ai-match-odds-generator/id6758236309) in Sports, so the short name is already used by another app. The proposed full calculator title must be checked in App Store Connect before release; search results do not establish availability.
 
 ## Release implications
 

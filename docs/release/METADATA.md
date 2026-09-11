@@ -39,4 +39,4 @@ Description:
 
 Version: 1.0.0, build 1. Initial release notes: “A little room to think. A few numbers with personality.”
 
-Publisher must supply final copyright, available name, support/privacy URLs, price, and territories. Do not claim availability on the App Store or link an invented store ID. Verify description against the final tested binary before uploading.
+Publisher must supply final copyright, available name, support/privacy URLs, price, and territories. Another app already uses Oddly in its name (see the market report), so verify the proposed full title in App Store Connect before committing to the release name. Do not claim availability on the App Store or link an invented store ID. Verify description against the final tested binary before uploading.
