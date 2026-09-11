@@ -1,0 +1,3 @@
+// Keep the real Signing.xcconfig out of Git (it is ignored).
+DEVELOPMENT_TEAM = YOUR_TEAM_ID
+ODDLY_BUNDLE_IDENTIFIER = com.yourcompany.oddly

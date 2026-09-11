@@ -1,0 +1,32 @@
+name: Build and test
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test calculation and personality engines
+        run: swift test
+      - name: Check app persistence and recovery coordinator
+        run: bash scripts/test-model.sh
+      - name: Verify generated project is current
+        run: |
+          python3 scripts/generate-project.py
+          git diff --exit-code -- Oddly.xcodeproj
+      - name: Validate repository assets and release configuration
+        run: python3 scripts/validate-project.py
+      - name: Build and test on iPhone Simulator
+        run: bash scripts/test-ios.sh
+      - name: Save test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-test-results
+          path: build/*.xcresult
+          if-no-files-found: ignore
