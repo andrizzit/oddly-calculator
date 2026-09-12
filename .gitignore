@@ -22,3 +22,6 @@ xcuserdata/
 .env.*
 !.env.example
 Oddly/Signing.xcconfig
+
+# Internal planning and release drafts
+/local-notes/

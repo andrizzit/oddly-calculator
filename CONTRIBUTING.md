@@ -7,7 +7,9 @@ Bug reports, accessibility improvements, translations, and properly terrible num
 3. Run `swift test` for the portable core, `scripts/test-model.sh` for local storage recovery, then `scripts/test-ios.sh` for the app and UI tests.
 4. Include the problem, resulting behavior, and test evidence in your pull request.
 
-Keep arithmetic deterministic. Jokes cannot change numbers, move keys, block input, make network calls, or shame people. Every new Easter egg needs a deterministic trigger, hint, test, and entry in the App Review notes. Respect Calm, Reduce Motion, and VoiceOver. Do not log users' calculations.
+Keep arithmetic deterministic. Jokes cannot change numbers, move keys, block input, make network calls, or shame people. Every new Easter egg needs a stable identifier, deterministic trigger, hint, and test. Follow the [humor guidelines](docs/HUMOR_DESIGN.md). Respect Calm, Reduce Motion, and VoiceOver. Do not log users' calculations.
+
+The [architecture guide](docs/PRODUCT_DESIGN.md) explains component boundaries, and the [testing guide](docs/QA.md) covers automated and manual checks.
 
 The calculator evaluates binary operations immediately from left to right. Change that behavior only through an explicit product decision, with examples and tests.
 

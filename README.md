@@ -6,11 +6,11 @@
 
 A native iPhone and iPad calculator with a warm paper palette, satisfying keys, a curious little companion, and eight numerical discoveries. Built in SwiftUI. Open source under the MIT license. No ads, tracking, accounts, backend, or third-party dependencies.
 
-**Release status:** working iOS app; core and Simulator tests pass, and an unsigned Release archive builds successfully. Not yet published on the App Store. See [QA evidence](docs/QA.md) and the [App Store release guide](docs/release/APP_STORE.md) for completed checks and remaining gates. The working name has not been reserved in App Store Connect.
+**Availability:** build and run Oddly from source using the instructions below. It is not yet available on the App Store.
 
 <img src="docs/assets/oddly-iphone-discovery.png" width="260" alt="Oddly on iPhone, showing 42 and its first discovery"> <img src="docs/assets/oddly-iphone-cabinet.png" width="260" alt="The curiosity cabinet with collectible discoveries">
 
-Actual iPhone 16 Pro Max Simulator captures from the passing UI suite. Validation includes 47 core tests, 18 coordinator checks, nine baseline iOS workflows, two supplemental workflows at the largest accessibility text size on iPhone SE, and five focused checks after the button-feedback update. A signed development build has also been installed and launched on a physical iPhone. See the QA report for scope and remaining device checks.
+Screenshots from the iPhone Simulator.
 
 ## A calculator with character
 
@@ -36,7 +36,9 @@ python3 scripts/validate-project.py
 bash scripts/test-ios.sh
 ```
 
-To run on your own iPhone, copy `Oddly/Signing.example.xcconfig` to `Oddly/Signing.xcconfig` and set your team and unique bundle identifier. The signing file stays out of Git. The default `com.example.oddly.calculator` is for local development only.
+To run on your own iPhone, copy `Oddly/Signing.example.xcconfig` to `Oddly/Signing.xcconfig` and set your team and unique bundle identifier. The signing file stays out of Git. The default `com.example.oddly.calculator` is for local development only. Select your connected iPhone in Xcode and press Run.
+
+To create a signed Release archive with your local signing settings, run `bash scripts/archive.sh`. The archive is written to `build/Oddly.xcarchive`.
 
 After adding/removing app or UI-test source files, regenerate the committed project:
 
@@ -72,12 +74,12 @@ The core uses Foundation `Decimal`, with up to 38 significant decimal digits int
 | `Tests/CalculatorCoreTests` | Arithmetic/state/persistence/personality regression tests |
 | `OddlyUITests` | Real-app XCUITest workflows |
 | `scripts` | Reproducible project, asset, test, preview, and archive tools |
-| `docs` | Research, design decisions, humor catalogue, privacy, QA, release materials |
+| `docs` | Architecture, humor guidelines, testing, privacy policy, and screenshots |
 
-## Publish and contribute
+## Contribute
 
 Source is available at [andrizzit/oddly-calculator](https://github.com/andrizzit/oddly-calculator). Issues and pull requests are welcome. Keep signing credentials and personal configuration in the ignored local signing file; never include them in a commit.
 
-For App Store distribution, follow [the release guide](docs/release/APP_STORE.md). It includes draft store copy, full Easter-egg reviewer notes, privacy guidance, and the archive workflow. Publication requires the publisher's active Apple Developer membership and Apple's approval.
+See the [architecture guide](docs/PRODUCT_DESIGN.md), [humor guidelines](docs/HUMOR_DESIGN.md), and [testing guide](docs/QA.md) when making changes.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and [privacy policy](docs/PRIVACY.md). All original code and artwork are [MIT licensed](LICENSE).

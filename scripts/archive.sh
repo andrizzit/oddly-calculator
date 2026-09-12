@@ -11,7 +11,7 @@ if [ "$xcode_major" -lt 26 ]; then
   exit 1
 fi
 if [ ! -f Oddly/Signing.xcconfig ] || grep -Eq 'YOUR_TEAM_ID|com\.yourcompany\.|com\.example\.' Oddly/Signing.xcconfig; then
-  echo "Create Oddly/Signing.xcconfig with your real DEVELOPMENT_TEAM and unique ODDLY_BUNDLE_IDENTIFIER. See docs/release/APP_STORE.md." >&2
+  echo "Create Oddly/Signing.xcconfig with your real DEVELOPMENT_TEAM and unique ODDLY_BUNDLE_IDENTIFIER. See the Run section in README.md." >&2
   exit 1
 fi
 swift test
