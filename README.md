@@ -10,7 +10,7 @@ A native iPhone and iPad calculator with a warm paper palette, satisfying keys, 
 
 <img src="docs/assets/oddly-iphone-discovery.png" width="260" alt="Oddly on iPhone, showing 42 and its first discovery"> <img src="docs/assets/oddly-iphone-cabinet.png" width="260" alt="The curiosity cabinet with collectible discoveries">
 
-Actual iPhone 16 Pro Max Simulator captures from the passing UI suite. Validation includes 47 core tests, 18 coordinator checks, nine baseline iOS workflows, and two supplemental workflows at the largest accessibility text size on iPhone SE. See the QA report for scope and remaining device checks.
+Actual iPhone 16 Pro Max Simulator captures from the passing UI suite. Validation includes 47 core tests, 18 coordinator checks, nine baseline iOS workflows, two supplemental workflows at the largest accessibility text size on iPhone SE, and five focused checks after the button-feedback update. A signed development build has also been installed and launched on a physical iPhone. See the QA report for scope and remaining device checks.
 
 ## A calculator with character
 
@@ -21,6 +21,7 @@ Actual iPhone 16 Pro Max Simulator captures from the passing UI suite. Validatio
 - Eight collectible discoveries with hints; no streaks, accounts, or nagging.
 - Light/dark appearance, optional haptics, accessible controls, and reduced-motion support.
 - Adaptive layouts for iPhone and iPad.
+- Clear press highlights for quick taps and held presses, in both themes.
 
 Try `6 × 7 =`. The universe's accounting department has entered the chat.
 
@@ -77,7 +78,7 @@ The development process used a control room, designer/architect, funny designer,
 
 ## Publish and contribute
 
-The repository is ready to be hosted on a Git service. A public remote has not been created automatically. After signing into GitHub, the owner can create a repository and push this local project. Do not include local signing credentials.
+Source is available at [andrizzit/oddly-calculator](https://github.com/andrizzit/oddly-calculator). Issues and pull requests are welcome. Keep signing credentials and personal configuration in the ignored local signing file; never include them in a commit.
 
 For App Store distribution, follow [the release guide](docs/release/APP_STORE.md). It includes draft store copy, full Easter-egg reviewer notes, privacy guidance, and the archive workflow. Publication requires the publisher's active Apple Developer membership and Apple's approval.
 

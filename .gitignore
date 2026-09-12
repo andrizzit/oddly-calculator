@@ -11,8 +11,13 @@ xcuserdata/
 *.ipa
 *.dSYM/
 *.p12
+*.pfx
+*.p8
+*.key
+*.pem
+*.cer
+*.cert
 *.mobileprovision
-AuthKey_*.p8
 .env
 .env.*
 !.env.example
