@@ -74,8 +74,6 @@ The core uses Foundation `Decimal`, with up to 38 significant decimal digits int
 | `scripts` | Reproducible project, asset, test, preview, and archive tools |
 | `docs` | Research, design decisions, humor catalogue, privacy, QA, release materials |
 
-The development process used a control room, designer/architect, funny designer, implementer, and independent QA. They explicitly challenged arithmetic notation, excessive interruptions, and unsupported feature promises. [Market research](docs/MARKET_RESEARCH.md), [design decisions](docs/PRODUCT_DESIGN.md), and [humor rules](docs/HUMOR_DESIGN.md) record the reasoning.
-
 ## Publish and contribute
 
 Source is available at [andrizzit/oddly-calculator](https://github.com/andrizzit/oddly-calculator). Issues and pull requests are welcome. Keep signing credentials and personal configuration in the ignored local signing file; never include them in a commit.
