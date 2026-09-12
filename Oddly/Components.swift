@@ -10,6 +10,9 @@ struct OddlyPalette {
     var mint: Color { dark ? Color(hex: 0x30463C) : Color(hex: 0xD9E7D8) }
     var orange: Color { Color(hex: 0xF26B38) }
     var orangeInk: Color { Color(hex: 0x202522) }
+    var pressedDigit: Color { dark ? Color(hex: 0x53665B) : Color(hex: 0xCEC9BD) }
+    var pressedUtility: Color { dark ? Color(hex: 0x75658D) : Color(hex: 0xBDB0DE) }
+    var pressedOrange: Color { Color(hex: 0xF8B18F) }
     var line: Color { ink.opacity(dark ? 0.2 : 0.12) }
 }
 
@@ -61,24 +64,88 @@ struct OddlyMascot: View {
     }
 }
 
-struct CalculatorKeyStyle: ButtonStyle {
+/// A native Button with a brief activation highlight, including very quick taps,
+/// keyboard shortcuts, and VoiceOver activation. The action is never delayed.
+struct FeedbackButton<Label: View>: View {
     let fill: Color
+    let pressedFill: Color
     let foreground: Color
     let selected: Bool
+    let cornerRadius: CGFloat
+    let raised: Bool
+    let bordered: Bool
+    let action: () -> Void
+    let label: Label
+    @State private var activation = 0
+    @State private var pulseActive = false
+
+    init(fill: Color = .clear, pressedFill: Color, foreground: Color,
+         selected: Bool = false, cornerRadius: CGFloat = 14,
+         raised: Bool = false, bordered: Bool = false,
+         action: @escaping () -> Void, @ViewBuilder label: () -> Label) {
+        self.fill = fill
+        self.pressedFill = pressedFill
+        self.foreground = foreground
+        self.selected = selected
+        self.cornerRadius = cornerRadius
+        self.raised = raised
+        self.bordered = bordered
+        self.action = action
+        self.label = label()
+    }
+
+    var body: some View {
+        Button {
+            pulseActive = true
+            activation &+= 1
+            action()
+        } label: {
+            label
+        }
+        .buttonStyle(PressFeedbackStyle(fill: fill, pressedFill: pressedFill,
+                                       foreground: foreground, selected: selected,
+                                       cornerRadius: cornerRadius, raised: raised,
+                                       bordered: bordered, activated: pulseActive))
+        .task(id: activation) {
+            guard activation > 0 else { return }
+            do {
+                try await Task.sleep(for: .milliseconds(80))
+                pulseActive = false
+            } catch {
+                // A newer activation owns the highlight; never clear its pulse.
+            }
+        }
+        .onDisappear { pulseActive = false }
+    }
+}
+
+private struct PressFeedbackStyle: ButtonStyle {
+    let fill: Color
+    let pressedFill: Color
+    let foreground: Color
+    let selected: Bool
+    let cornerRadius: CGFloat
+    let raised: Bool
+    let bordered: Bool
+    let activated: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     func makeBody(configuration: Configuration) -> some View {
+        let highlighted = configuration.isPressed || activated
         configuration.label
             .foregroundStyle(foreground)
-            .background(fill, in: RoundedRectangle(cornerRadius: 21, style: .continuous))
+            .background(highlighted ? pressedFill : fill,
+                        in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
             .overlay {
-                RoundedRectangle(cornerRadius: 21, style: .continuous)
-                    .strokeBorder(foreground.opacity(selected ? 0.9 : 0.06), lineWidth: selected ? 2 : 1)
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .strokeBorder(foreground.opacity(selected ? 0.9 : (bordered ? 0.08 : 0)),
+                                  lineWidth: selected ? 2 : 1)
+                    .allowsHitTesting(false)
             }
-            .shadow(color: Color.black.opacity(configuration.isPressed ? 0 : 0.04), radius: 0, y: 3)
-            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.95 : 1)
-            .opacity(configuration.isPressed ? 0.83 : 1)
-            .animation(reduceMotion ? nil : .easeOut(duration: 0.12), value: configuration.isPressed)
+            .shadow(color: Color.black.opacity(raised && !highlighted ? 0.04 : 0), radius: 0, y: 3)
+            // Immediate color on contact; a gentle release. Keep labels and hit
+            // regions stationary, and retain color feedback with Reduce Motion.
+            .animation(highlighted || reduceMotion ? nil : .easeOut(duration: 0.16), value: highlighted)
     }
 }
 
@@ -90,15 +157,14 @@ struct RoundToolbarButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        FeedbackButton(fill: palette.digit, pressedFill: palette.pressedDigit,
+                       foreground: palette.ink, cornerRadius: 22, bordered: true,
+                       action: action) {
             Image(systemName: symbol)
                 .font(.system(size: 18, weight: .medium))
                 .frame(width: 44, height: 44)
-                .background(palette.digit, in: Circle())
-                .overlay(Circle().strokeBorder(palette.line, lineWidth: 1))
+                .contentShape(Circle())
         }
-        .buttonStyle(.plain)
-        .foregroundStyle(palette.ink)
         .accessibilityLabel(label)
         .accessibilityIdentifier(id)
     }

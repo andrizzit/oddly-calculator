@@ -121,13 +121,14 @@ struct CalculatorView: View {
                     .accessibilityLabel("Expression")
                     .accessibilityValue(model.engine.expression.isEmpty ? "No pending operation" : model.engine.expression)
                     .accessibilityIdentifier("calculator.expression")
-                Button { model.press(.delete) } label: {
+                FeedbackButton(pressedFill: palette.mint, foreground: palette.ink) {
+                    model.press(.delete)
+                } label: {
                     Image(systemName: "delete.left")
                         .font(.system(size: 19, weight: .regular))
                         .frame(width: 44, height: 44)
                         .contentShape(Rectangle())
                 }
-                .buttonStyle(.plain)
                 .accessibilityLabel("Delete last digit")
                 .accessibilityHint("Cancels a pending operator, or clears a completed result")
                 .accessibilityIdentifier("key.delete")
@@ -244,8 +245,12 @@ struct CalculatorView: View {
                      height: CGFloat, utility: Bool = false, accent: Bool = false,
                      selected: Bool = false, shortcut: KeyEquivalent? = nil, small: Bool = false) -> some View {
         let fill = accent ? palette.orange : (utility ? palette.utility : palette.digit)
+        let pressedFill = accent ? palette.pressedOrange : (utility ? palette.pressedUtility : palette.pressedDigit)
         let foreground = accent ? palette.orangeInk : palette.ink
-        let button = Button { model.press(action) } label: {
+        let button = FeedbackButton(fill: fill, pressedFill: pressedFill, foreground: foreground,
+                                    selected: selected, cornerRadius: 21, raised: true, bordered: true) {
+            model.press(action)
+        } label: {
             Text(title)
                 .font(.system(size: small ? min(keyFont, 22) : min(keyFont, 42),
                               weight: accent ? .medium : .regular, design: .rounded))
@@ -255,7 +260,6 @@ struct CalculatorView: View {
                 .frame(height: height)
                 .contentShape(RoundedRectangle(cornerRadius: 21))
         }
-        .buttonStyle(CalculatorKeyStyle(fill: fill, foreground: foreground, selected: selected))
         .accessibilityLabel(label)
         .accessibilityIdentifier("key.\(id)")
         .accessibilityAddTraits(selected ? .isSelected : [])
@@ -266,7 +270,9 @@ struct CalculatorView: View {
     }
 
     private var collectionLink: some View {
-        Button { sheet = .collection } label: {
+        FeedbackButton(pressedFill: palette.mint, foreground: palette.ink) {
+            sheet = .collection
+        } label: {
             HStack(spacing: 7) {
                 Image(systemName: "sparkles")
                 Text("Curiosity cabinet")
@@ -283,7 +289,6 @@ struct CalculatorView: View {
             .padding(.horizontal, 3)
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
         .accessibilityLabel("Curiosity cabinet, \(model.discoveredEggIDs.count) of \(PersonalityEngine.catalogue.count) discoveries")
         .accessibilityIdentifier("toolbar.collection")
     }

@@ -4,7 +4,7 @@
 
 The source and release materials can be prepared without membership. App Store publication requires an active Apple Developer Program membership, a signed iOS archive, an App Store Connect app record, and Apple's review. **A source repository or a successful macOS test is not an App Store release.** See `../QA.md` for actual verification results.
 
-Verified on September 11, 2026: Xcode 26.6 and the iOS 26.5 Simulator are installed, GitHub CLI authentication works, all 47 core tests, 18 coordinator checks, nine baseline native iOS workflows, and two supplemental largest-text workflows pass. The current unsigned Release archive is `build/Oddly-1.0.0-ReleaseCandidate.xcarchive`. The publisher has no active Developer Program membership yet. A signing team and physical-device verification are still required before distribution.
+Verified on September 11, 2026: Xcode 26.6 and the iOS 26.5 Simulator are installed, GitHub CLI authentication works, all 47 core tests, 18 coordinator checks, nine baseline native iOS workflows, and two supplemental largest-text workflows pass. The subsequent press-feedback update passed five focused iOS workflows and produced `build/Oddly-PressFeedback-Unsigned.xcarchive`, with metadata, privacy manifest, and exclusion of Debug test switches verified. A development build was signed with the publisher's Personal Team and installed on an iPhone 16 Pro Max running iOS 26.6.2. The publisher has no active Developer Program membership yet; physical-device accessibility and haptics verification and distribution setup remain required.
 
 ## 1. Install and test
 

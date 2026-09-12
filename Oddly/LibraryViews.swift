@@ -42,7 +42,7 @@ struct HistoryView: View {
                         LazyVStack(spacing: 10) {
                             ForEach(model.history.records) { record in
                                 HStack(alignment: .center, spacing: 10) {
-                                    Button {
+                                    FeedbackButton(pressedFill: palette.mint, foreground: palette.ink) {
                                         model.recall(record)
                                         dismiss()
                                     } label: {
@@ -59,16 +59,16 @@ struct HistoryView: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .contentShape(Rectangle())
                                     }
-                                    .buttonStyle(.plain)
                                     .accessibilityLabel("\(record.expression), equals \(record.result)")
                                     .accessibilityHint("Use this answer in the calculator")
                                     .accessibilityIdentifier("history.recall.\(record.id.uuidString)")
-                                    Button { model.copyResult(record.result) } label: {
+                                    FeedbackButton(pressedFill: palette.mint, foreground: palette.ink) {
+                                        model.copyResult(record.result)
+                                    } label: {
                                         Image(systemName: "doc.on.doc")
                                             .frame(width: 44, height: 44)
                                             .contentShape(Rectangle())
                                     }
-                                    .buttonStyle(.plain)
                                     .accessibilityLabel("Copy \(record.result)")
                                 }
                                 .padding(17)

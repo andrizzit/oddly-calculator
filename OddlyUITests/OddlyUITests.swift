@@ -304,4 +304,51 @@ final class OddlyUITests: XCTestCase {
         expectResult("42")
         attachScreenshot("Small phone accessibility5 landscape arithmetic", wholeScreen: true)
     }
+
+    func testPressFeedbackPreservesHoldCancellationAndScrolling() {
+        let five = app.buttons["key.5"]
+        scrollFullyIntoView(five)
+        attachScreenshot("Paper key before held press", wholeScreen: true)
+        XCTContext.runActivity(named: "Hold Paper digit for native press feedback") { _ in
+            five.press(forDuration: 1.5)
+        }
+        expectResult("5")
+        tap("key.clear")
+
+        let outsideKey = app.coordinate(withNormalizedOffset: .zero)
+            .withOffset(CGVector(dx: 4, dy: five.frame.midY))
+        five.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .press(forDuration: 0.2, thenDragTo: outsideKey)
+        expectResult("0")
+
+        tap("toolbar.settings")
+        let appearance = app.buttons["settings.appearance"]
+        XCTAssertTrue(appearance.waitForExistence(timeout: 5))
+        appearance.tap()
+        let midnight = app.buttons["Midnight"]
+        XCTAssertTrue(midnight.waitForExistence(timeout: 5))
+        midnight.tap()
+        tap("settings.done")
+        scrollFullyIntoView(five)
+        attachScreenshot("Midnight key before held press", wholeScreen: true)
+        XCTContext.runActivity(named: "Hold Midnight digit for native press feedback") { _ in
+            five.press(forDuration: 1.5)
+        }
+        expectResult("5")
+        tap("key.clear")
+
+        app.terminate()
+        app.launchArguments = ["--uitesting-largest-type"]
+        app.launch()
+        XCTAssertTrue(app.staticTexts["calculator.display"].waitForExistence(timeout: 10))
+        let seven = app.buttons["key.7"]
+        scrollFullyIntoView(seven)
+        let yBeforeScroll = seven.frame.minY
+        let start = seven.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -150)))
+        XCTAssertLessThan(seven.frame.minY, yBeforeScroll - 20,
+                          "A drag beginning on a key must scroll the calculator")
+        expectResult("0")
+        attachScreenshot("Scroll starting on a key preserves the result", wholeScreen: true)
+    }
 }
